@@ -27,6 +27,44 @@ La classe `Model` est responsable de l'exécution du traitement long. Elle accep
 - `void setProgressCallback(std::function<void(const std::string&, float)> callback)`: Définit la callback pour suivre la progression.
 - `void longRunningProcess()`: Exécute le traitement long et appelle la callback pour signaler la progression.
 
+## Diagramme de classe
+
+```plantuml
+@startuml
+class HMI {
+  - Model model
+  - std::function<void(const std::string&, float)> callback
+  + void init()
+  + void startProcessing()
+  + void progressCallback(const std::string& message, float percentage)
+}
+
+class Model {
+  - std::function<void(const std::string&, float)> progressCallback
+  + void setProgressCallback(std::function<void(const std::string&, float)> callback)
+  + void longRunningProcess()
+}
+
+HMI --> Model
+@enduml
+```
+
+## Diagramme de séquence
+
+```plantuml
+@startuml
+actor User
+participant HMI
+participant Model
+
+User -> HMI: init()
+HMI -> Model: setProgressCallback(callback)
+User -> HMI: startProcessing()
+HMI -> Model: longRunningProcess()
+Model -> HMI: progressCallback("Processing", percentage)
+@enduml
+```
+
 ## Compilation et exécution
 
 ### Prérequis
